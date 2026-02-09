@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { AppTab } from '../types';
 import { Icons } from '../constants';
@@ -35,13 +36,15 @@ export const StatusBar: React.FC = () => {
   );
 };
 
-export const Navbar: React.FC = () => (
-  <header className="absolute top-12 left-0 right-0 z-50 h-14 flex items-center justify-between px-8">
-    <button className="w-11 h-11 flex items-center justify-center hover:bg-white/10 rounded-full transition-all">
-      <Icons.Search />
+export const Navbar: React.FC<{ onHomeClick?: () => void; hide?: boolean }> = ({ onHomeClick, hide }) => (
+  <header className={`absolute top-12 left-0 right-0 z-[80] h-14 flex items-center justify-between px-8 transition-opacity duration-300 ${hide ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+    <button onClick={onHomeClick} className="w-11 h-11 flex items-center justify-center hover:bg-white/10 rounded-full transition-all group">
+      <div className="group-hover:scale-125 transition-transform duration-300">
+        <Icons.Search />
+      </div>
     </button>
-    <h1 className="text-2xl font-black italic tracking-tighter uppercase text-white drop-shadow-[0_4px_12px_rgba(0,0,0,1)]">LUSH</h1>
-    <div className="w-11 h-11 rounded-full bg-white/10 border-2 border-white/20 overflow-hidden shadow-2xl">
+    <h1 onClick={onHomeClick} className="text-2xl font-black italic tracking-tighter uppercase text-white drop-shadow-[0_4px_12px_rgba(0,0,0,1)] cursor-pointer hover:scale-105 transition-transform">LUSH</h1>
+    <div className="w-11 h-11 rounded-full bg-white/10 border-2 border-white/20 overflow-hidden shadow-2xl transition-transform hover:scale-110">
       <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100" alt="Avatar" className="w-full h-full object-cover" />
     </div>
   </header>
