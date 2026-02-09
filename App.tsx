@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { AppTab, GeneratedItem } from './types';
 import { Navbar, BottomNav, StatusBar } from './components/Layout';
@@ -108,8 +109,9 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AppTab>(AppTab.HOME);
   const [library, setLibrary] = useState<GeneratedItem[]>([]);
   const [selectedStyleId, setSelectedStyleId] = useState<string | undefined>();
-  const [previewItem, setPreviewItem] = useState<GeneratedItem | null>(null);
+  const [previewItemIndex, setPreviewItemIndex] = useState<number | null>(null);
   const [externalRef, setExternalRef] = useState<string | null>(null);
+  const [isResultShowing, setIsResultShowing] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('lush_library');
@@ -130,41 +132,51 @@ const App: React.FC = () => {
     setActiveTab(AppTab.GENERATE);
   };
 
+  const returnHome = () => {
+    setActiveTab(AppTab.HOME);
+    setSelectedStyleId(undefined);
+    setIsResultShowing(false);
+  };
+
   return (
-    <div className="h-screen w-screen bg-[#050505] flex items-center justify-center overflow-hidden p-4 lg:p-10">
+    <div className="h-screen w-screen bg-[#050505] flex items-center justify-center overflow-hidden p-6 lg:p-14">
       {/* Desktop Layout */}
-      <div className="hidden lg:flex flex-row items-center justify-center gap-12 xl:gap-24 w-full max-w-[1650px] h-full max-h-[850px]">
+      <div className="hidden lg:flex flex-row items-center justify-center gap-12 xl:gap-20 w-full max-w-[1700px] h-full max-h-[850px]">
         
         {/* Left Column: Styles */}
-        <div className="flex flex-col w-[440px] h-full pt-4">
-          <div className="mb-12 flex-shrink-0 pl-2">
-            <h1 className="text-8xl xl:text-9xl font-black italic tracking-tighter uppercase leading-[0.7] text-white select-none">LUSH<br/>STUDIO</h1>
+        <div className="flex flex-col w-[480px] h-full pt-4 animate-slow-float">
+          <div className="mb-10 flex-shrink-0 pl-2 pr-6">
+            <h1 onClick={returnHome} className="text-8xl xl:text-9xl font-black italic tracking-tighter uppercase leading-[0.8] text-white select-none drop-shadow-2xl cursor-pointer">LUSH<br/>STUDIO</h1>
             <p className="mt-8 text-[11px] font-black text-white/20 uppercase tracking-[10px] pl-1">Premium AI Aesthetics</p>
           </div>
           
-          <div className="flex-1 overflow-y-auto pr-6 hide-scrollbar space-y-5 pb-24">
+          <div className="flex-1 overflow-y-auto pr-6 hide-scrollbar space-y-5 pb-10">
             {STYLE_TEMPLATES.map((style) => (
               <div 
                 key={style.id} 
                 onClick={() => startGenWithStyle(style.id)}
-                className="group h-36 rounded-[36px] overflow-hidden relative shadow-2xl cursor-pointer hover:scale-[1.04] active:scale-95 transition-all duration-500"
+                className="group h-36 rounded-[36px] overflow-hidden relative shadow-2xl cursor-pointer hover:scale-[1.04] active:scale-95 transition-all duration-500 smooth-scale"
                 style={{ background: style.mood }}
               >
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                <div className="relative h-full flex flex-col justify-center p-10 z-20">
+                <div className="relative h-full flex flex-col justify-center p-10 z-20 pointer-events-none">
                   <h3 className="text-3xl font-black italic uppercase tracking-tighter leading-none text-white drop-shadow-2xl">{style.name}</h3>
                   <span className="text-[11px] font-black opacity-80 uppercase mt-3 tracking-[0.2em] text-white/70">{style.id.split('-')[1]} mode</span>
                 </div>
-                <img src={style.imageUrl} className="absolute -bottom-8 -right-6 h-[145%] object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out outline-img" />
+                <img 
+                  src={style.imageUrl} 
+                  className="absolute -bottom-8 -right-6 h-[145%] object-contain grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out outline-img pointer-events-none smooth-scale" 
+                  alt={style.name}
+                />
               </div>
             ))}
           </div>
         </div>
 
         {/* Center: Main Phone Frame */}
-        <div className="phone-frame border-[#222] shadow-[0_60px_150px_rgba(0,0,0,0.9),0_20px_60px_rgba(255,107,0,0.15)]">
+        <div className="phone-frame border-[#222] shadow-[0_60px_150px_rgba(0,0,0,0.9),0_20px_60px_rgba(255,107,0,0.15)] relative">
           <StatusBar />
-          <Navbar />
+          <Navbar onHomeClick={returnHome} hide={isResultShowing} />
           <main className="h-full bg-black">
             {activeTab === AppTab.HOME && <Home onStartGen={startGenWithStyle} />}
             {activeTab === AppTab.GENERATE && (
@@ -172,13 +184,20 @@ const App: React.FC = () => {
                 initialStyleId={selectedStyleId} 
                 onItemGenerated={handleItemGenerated} 
                 externalRefImage={externalRef || undefined}
+                onResultVisibilityChange={setIsResultShowing}
               />
             )}
             {activeTab === AppTab.LIBRARY && (
-              <Library items={library} onSelectItem={setPreviewItem} />
+              <Library items={library} onSelectItem={(item) => setPreviewItemIndex(library.findIndex(i => i.id === item.id))} />
             )}
           </main>
-          {previewItem && <DetailModal item={previewItem} onClose={() => setPreviewItem(null)} />}
+          {previewItemIndex !== null && (
+            <DetailModal 
+              items={library} 
+              initialIndex={previewItemIndex} 
+              onClose={() => setPreviewItemIndex(null)} 
+            />
+          )}
         </div>
 
         {/* Right: Preview Phone Frame */}
@@ -196,7 +215,7 @@ const App: React.FC = () => {
       <div className="lg:hidden w-full h-full max-w-[500px] relative">
         <div className="h-full w-full phone-frame !w-full !h-full !border-0 !rounded-none !shadow-none">
           <StatusBar />
-          <Navbar />
+          <Navbar onHomeClick={returnHome} hide={isResultShowing} />
           <main className="h-full bg-black">
             {activeTab === AppTab.HOME && <Home onStartGen={startGenWithStyle} />}
             {activeTab === AppTab.GENERATE && (
@@ -204,13 +223,20 @@ const App: React.FC = () => {
                 initialStyleId={selectedStyleId} 
                 onItemGenerated={handleItemGenerated} 
                 externalRefImage={externalRef || undefined}
+                onResultVisibilityChange={setIsResultShowing}
               />
             )}
             {activeTab === AppTab.LIBRARY && (
-              <Library items={library} onSelectItem={setPreviewItem} />
+              <Library items={library} onSelectItem={(item) => setPreviewItemIndex(library.findIndex(i => i.id === item.id))} />
             )}
           </main>
-          {previewItem && <DetailModal item={previewItem} onClose={() => setPreviewItem(null)} />}
+          {previewItemIndex !== null && (
+            <DetailModal 
+              items={library} 
+              initialIndex={previewItemIndex} 
+              onClose={() => setPreviewItemIndex(null)} 
+            />
+          )}
           <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
       </div>
