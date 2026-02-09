@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { AppTab, GeneratedItem } from './types';
 import { Navbar, BottomNav, StatusBar } from './components/Layout';
@@ -26,12 +25,11 @@ const StoryPreview: React.FC<{
         }
         return prev + 1;
       });
-    }, 3000);
+    }, 3500);
     return () => clearInterval(timer);
   }, []);
 
   const currentStyle = STYLE_TEMPLATES[styleIndex];
-  // Ensure we use a cycle from the verified RANDOM_FACES pool
   const imageUrl = RANDOM_FACES[(styleIndex * 3 + photoIndex) % RANDOM_FACES.length];
 
   return (
@@ -51,33 +49,32 @@ const StoryPreview: React.FC<{
         }}
       />
       
-      {/* Progress Bars */}
-      <div className="absolute top-14 left-0 right-0 z-50 px-4 flex gap-1.5">
+      <div className="absolute top-14 left-0 right-0 z-50 px-5 flex gap-1.5">
         {[0, 1, 2].map((i) => (
           <div key={i} className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
             {i < photoIndex && <div className="h-full w-full bg-white" />}
-            {i === photoIndex && <div key={`${styleIndex}-${photoIndex}`} className="h-full bg-white animate-progress" style={{ animationDuration: '3s' }} />}
+            {i === photoIndex && <div key={`${styleIndex}-${photoIndex}`} className="h-full bg-white animate-progress" style={{ animationDuration: '3.5s' }} />}
           </div>
         ))}
       </div>
 
-      <div className="h-full w-full relative transition-all duration-700 animate-in fade-in zoom-in-95 content-to-blur">
+      <div className="h-full w-full relative transition-all duration-700 content-to-blur">
         <img src={imageUrl} className="w-full h-full object-cover" alt="Preview" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/30" />
         
-        <div className="absolute bottom-24 left-8 right-8 space-y-5">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full p-0.5 shadow-2xl" style={{ background: currentStyle.mood }}>
+        <div className="absolute bottom-24 left-8 right-8 space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-full p-0.5 shadow-2xl ring-2 ring-white/10" style={{ background: currentStyle.mood }}>
                <img src={currentStyle.imageUrl} className="w-full h-full object-cover rounded-full outline-img" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-orange-400">Featured AI</p>
-              <h3 className="text-xl font-black italic tracking-tighter uppercase text-white">{currentStyle.name}</h3>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500">Trending Now</p>
+              <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white leading-none mt-1">{currentStyle.name}</h3>
             </div>
           </div>
           <div className="flex gap-4 items-center">
-             <div className="flex-1 h-12 rounded-full lush-glass flex items-center px-6 text-xs font-bold text-white/50 border border-white/10">Message...</div>
-             <div className="flex gap-4 items-center text-white/80">
+             <div className="flex-1 h-12 rounded-full lush-glass flex items-center px-6 text-xs font-bold text-white/50 border border-white/10">Quick message...</div>
+             <div className="flex gap-5 items-center text-white/90">
                <Icons.Heart />
                <Icons.PaperPlane />
              </div>
@@ -85,37 +82,22 @@ const StoryPreview: React.FC<{
         </div>
       </div>
 
-      {/* Hover Controls - Moved from center phone to right phone as interaction layer */}
-      <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center opacity-0 hover-icon transition-all duration-300 backdrop-blur-sm bg-black/40">
-        <div className="flex flex-col items-center gap-8">
-           <div className="flex items-center gap-10">
-              <button 
-                onClick={() => setActiveTab(AppTab.HOME)}
-                className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === AppTab.HOME ? 'text-white scale-110' : 'text-white/40 hover:text-white'}`}
-              >
+      <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center opacity-0 hover-icon transition-all duration-500 backdrop-blur-md bg-black/40">
+        <div className="flex flex-col items-center gap-10">
+           <div className="flex items-center gap-12">
+              <button onClick={() => setActiveTab(AppTab.HOME)} className={`flex flex-col items-center gap-2 transition-colors ${activeTab === AppTab.HOME ? 'text-white' : 'text-white/40 hover:text-white'}`}>
                 <Icons.Home />
-                <span className="text-[9px] font-black uppercase tracking-widest">Home</span>
+                <span className="text-[9px] font-black uppercase tracking-[0.2em]">Studio</span>
               </button>
-              
-              <button 
-                onClick={() => fileInputRef.current?.click()}
-                className={`w-16 h-16 lush-card-gradient rounded-2xl rotate-45 flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all`}
-              >
-                <div className="-rotate-45 text-white">
-                  <Icons.Plus size={24} />
-                </div>
+              <button onClick={() => fileInputRef.current?.click()} className="w-20 h-20 lush-card-gradient rounded-3xl rotate-45 flex items-center justify-center shadow-[0_0_40px_rgba(255,107,0,0.4)] hover:scale-110 active:scale-95 transition-all">
+                <div className="-rotate-45 text-white"><Icons.Plus size={32} /></div>
               </button>
-
-              <button 
-                onClick={() => setActiveTab(AppTab.LIBRARY)}
-                className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === AppTab.LIBRARY ? 'text-white scale-110' : 'text-white/40 hover:text-white'}`}
-              >
+              <button onClick={() => setActiveTab(AppTab.LIBRARY)} className={`flex flex-col items-center gap-2 transition-colors ${activeTab === AppTab.LIBRARY ? 'text-white' : 'text-white/40 hover:text-white'}`}>
                 <Icons.Library />
-                <span className="text-[9px] font-black uppercase tracking-widest">Library</span>
+                <span className="text-[9px] font-black uppercase tracking-[0.2em]">Items</span>
               </button>
            </div>
-           
-           <span className="text-[10px] font-black uppercase tracking-[4px] text-white/60 animate-pulse">Use as Reference</span>
+           <span className="text-[11px] font-black uppercase tracking-[6px] text-white/80 animate-pulse">Select Your Base</span>
         </div>
       </div>
     </div>
@@ -148,45 +130,42 @@ const App: React.FC = () => {
     setActiveTab(AppTab.GENERATE);
   };
 
-  const handleRefFromPreview = (url: string) => {
-    setExternalRef(url);
-    setActiveTab(AppTab.GENERATE);
-  };
-
   return (
-    <div className="min-h-screen bg-[#050505] flex items-center justify-center lg:p-12 overflow-x-hidden select-none">
-      <div className="hidden lg:flex gap-12 items-center max-w-[1200px] w-full">
-        {/* Left Column: Style Gallery */}
-        <div className="flex-1 max-w-[320px] h-[812px] flex flex-col pt-12">
-           <div className="mb-12 flex-shrink-0">
-             <h1 className="text-7xl font-black italic tracking-tighter uppercase leading-[0.7] text-white">LUSH<br/>STUDIO</h1>
-             <p className="mt-6 text-[11px] font-black text-white/20 uppercase tracking-[6px]">Premium AI Styles</p>
-           </div>
-           
-           <div className="flex-1 overflow-y-auto pr-4 hide-scrollbar space-y-4 pb-20 mask-gradient">
-             {STYLE_TEMPLATES.map((style) => (
-               <div 
-                 key={style.id} 
-                 onClick={() => startGenWithStyle(style.id)}
-                 className="group h-28 rounded-[28px] overflow-hidden relative shadow-xl cursor-pointer hover:scale-[1.02] active:scale-95 transition-all duration-300"
-                 style={{ background: style.mood }}
-               >
-                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors" />
-                  <div className="relative h-full flex flex-col justify-center p-6 z-20">
-                     <h3 className="text-lg font-black italic uppercase tracking-tighter leading-none text-white drop-shadow-md">{style.name}</h3>
-                     <span className="text-[9px] font-bold opacity-70 uppercase mt-1 tracking-widest text-white">{style.id.split('-')[1]}</span>
-                  </div>
-                  <img src={style.imageUrl} className="absolute -bottom-4 -right-3 h-[120%] object-contain grayscale group-hover:grayscale-0 transition-all duration-700 outline-img" />
-               </div>
-             ))}
-           </div>
+    <div className="h-screen w-screen bg-[#050505] flex items-center justify-center overflow-hidden p-4 lg:p-10">
+      {/* Desktop Layout */}
+      <div className="hidden lg:flex flex-row items-center justify-center gap-12 xl:gap-24 w-full max-w-[1650px] h-full max-h-[850px]">
+        
+        {/* Left Column: Styles */}
+        <div className="flex flex-col w-[440px] h-full pt-4">
+          <div className="mb-12 flex-shrink-0 pl-2">
+            <h1 className="text-8xl xl:text-9xl font-black italic tracking-tighter uppercase leading-[0.7] text-white select-none">LUSH<br/>STUDIO</h1>
+            <p className="mt-8 text-[11px] font-black text-white/20 uppercase tracking-[10px] pl-1">Premium AI Aesthetics</p>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto pr-6 hide-scrollbar space-y-5 pb-24">
+            {STYLE_TEMPLATES.map((style) => (
+              <div 
+                key={style.id} 
+                onClick={() => startGenWithStyle(style.id)}
+                className="group h-36 rounded-[36px] overflow-hidden relative shadow-2xl cursor-pointer hover:scale-[1.04] active:scale-95 transition-all duration-500"
+                style={{ background: style.mood }}
+              >
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+                <div className="relative h-full flex flex-col justify-center p-10 z-20">
+                  <h3 className="text-3xl font-black italic uppercase tracking-tighter leading-none text-white drop-shadow-2xl">{style.name}</h3>
+                  <span className="text-[11px] font-black opacity-80 uppercase mt-3 tracking-[0.2em] text-white/70">{style.id.split('-')[1]} mode</span>
+                </div>
+                <img src={style.imageUrl} className="absolute -bottom-8 -right-6 h-[145%] object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out outline-img" />
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Center Main App Phone - Optimized Scale, Removed navigation footer to prevent stretching */}
-        <div className="phone-frame border-[#2a2a2a] shadow-[0_40px_100px_rgba(255,107,0,0.1)] scale-[1.0] z-20">
+        {/* Center: Main Phone Frame */}
+        <div className="phone-frame border-[#222] shadow-[0_60px_150px_rgba(0,0,0,0.9),0_20px_60px_rgba(255,107,0,0.15)]">
           <StatusBar />
           <Navbar />
-          <main className="h-full">
+          <main className="h-full bg-black">
             {activeTab === AppTab.HOME && <Home onStartGen={startGenWithStyle} />}
             {activeTab === AppTab.GENERATE && (
               <Generate 
@@ -202,19 +181,20 @@ const App: React.FC = () => {
           {previewItem && <DetailModal item={previewItem} onClose={() => setPreviewItem(null)} />}
         </div>
 
-        {/* Right Column: Story Preview Phone - Matched Scale to Center */}
-        <div className="phone-frame border-[#2a2a2a] opacity-90 hover:opacity-100 transition-opacity duration-500 scale-[1.0] z-10 shadow-2xl">
+        {/* Right: Preview Phone Frame */}
+        <div className="phone-frame border-[#222] opacity-90 hover:opacity-100 transition-all duration-700 shadow-[0_40px_100px_rgba(0,0,0,0.8)]">
           <StatusBar />
           <StoryPreview 
             activeTab={activeTab} 
             setActiveTab={setActiveTab} 
-            onReferenceSelected={handleRefFromPreview} 
+            onReferenceSelected={(url) => { setExternalRef(url); setActiveTab(AppTab.GENERATE); }} 
           />
         </div>
       </div>
 
-      {/* Mobile Only View */}
-      <div className="lg:hidden w-full h-full fixed inset-0">
+      {/* Mobile-Only Layout */}
+      <div className="lg:hidden w-full h-full max-w-[500px] relative">
+        <div className="h-full w-full phone-frame !w-full !h-full !border-0 !rounded-none !shadow-none">
           <StatusBar />
           <Navbar />
           <main className="h-full bg-black">
@@ -232,6 +212,7 @@ const App: React.FC = () => {
           </main>
           {previewItem && <DetailModal item={previewItem} onClose={() => setPreviewItem(null)} />}
           <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
       </div>
     </div>
   );
