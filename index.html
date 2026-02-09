@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lush AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #050505;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    .lush-card-gradient {
+      background: linear-gradient(105deg, #ff6b00 0%, #ff3d00 45%, #ec008c 100%);
+    }
+    .lush-glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes progress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    .animate-progress {
+      animation: progress linear forwards;
+    }
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      border-radius: 54px;
+      border: 10px solid #1a1a1a;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 40px 80px -20px rgba(0,0,0,0.9), inset 0 0 0 2px rgba(255,255,255,0.05);
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      left: -13px;
+      top: 120px;
+      width: 3px;
+      height: 30px;
+      background: #333;
+      border-radius: 2px 0 0 2px;
+      box-shadow: 0 45px 0 #333, 0 90px 0 #333;
+      z-index: -1;
+    }
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      right: -13px;
+      top: 180px;
+      width: 3px;
+      height: 60px;
+      background: #333;
+      border-radius: 0 2px 2px 0;
+      z-index: -1;
+    }
+    .status-bar {
+      height: 44px;
+      padding: 0 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 700;
+      z-index: 100;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 12px;
+      animation: scroll-left 50s linear infinite;
+    }
+    .carousel-track-reverse {
+      display: flex;
+      gap: 12px;
+      animation: scroll-right 50s linear infinite;
+    }
+    @keyframes scroll-left {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-208px * 7.5 - 12px * 7.5)); }
+    }
+    @keyframes scroll-right {
+      0% { transform: translateX(calc(-208px * 7.5 - 12px * 7.5)); }
+      100% { transform: translateX(0); }
+    }
+    .outline-img {
+       filter: drop-shadow(0 0 2px white) drop-shadow(0 0 1px white);
+    }
+    .preview-blur-on-hover:hover .content-to-blur {
+      filter: blur(10px);
+      transition: filter 0.4s ease;
+    }
+    .preview-blur-on-hover:hover .hover-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.40.0",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.3"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

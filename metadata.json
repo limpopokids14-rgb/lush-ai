@@ -1,0 +1,7 @@
+{
+  "name": "Lush AI - Style Generator",
+  "description": "A high-end AI generator for stylish images and videos from photo references, inspired by Higgsfield and Glam AI.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
