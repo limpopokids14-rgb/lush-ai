@@ -7,12 +7,12 @@ interface HomeProps {
 }
 
 export const Home: React.FC<HomeProps> = ({ onStartGen }) => {
-  const users = ['Roxz', 'Wades', 'Ronald', 'Cody', 'Maya', 'Sia', 'Tobi', 'Elena', 'Kael', 'Luna', 'Vera', 'Jace', 'Mila', 'Finn', 'Zara'];
+  const users = ['Roxz', 'Wades', 'Ronald', 'Cody', 'Maya', 'Sia', 'Tobi', 'Elena', 'Kael', 'Luna', 'Vera', 'Jace', 'Mila', 'Finn', 'Zara', 'Axel', 'Ivy', 'Leo', 'Nova', 'Zane', 'Yara', 'Otto', 'Hugo', 'Cleo', 'Bria', 'Remi', 'Sloane'];
   
-  // Берем первые 15 лиц для сторис
-  const shortImages = RANDOM_FACES.slice(0, 15);
-  // Берем следующие 15 лиц для избранного, чтобы не было повторов
-  const favImages = RANDOM_FACES.slice(15, 30);
+  // Используем все 27 изображений для Shorts
+  const shortImages = RANDOM_FACES.slice(0, 27);
+  // Для избранного возьмем изображения с конца списка, чтобы они отличались от первых сторис
+  const favImages = [...RANDOM_FACES].reverse().slice(0, 15);
 
   return (
     <div className="h-full pt-24 pb-12 overflow-y-auto hide-scrollbar animate-in fade-in duration-1000">
@@ -20,12 +20,12 @@ export const Home: React.FC<HomeProps> = ({ onStartGen }) => {
       <section className="px-6 space-y-4">
         <h2 className="text-base font-black tracking-tight uppercase italic drop-shadow-md text-white/90">LUSH shorts</h2>
         <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
-          {users.map((name, i) => (
+          {shortImages.map((url, i) => (
             <div key={i} className="flex-shrink-0 flex flex-col items-center">
               <div className="w-[88px] h-[88px] rounded-[26px] border-2 border-orange-500 p-0.5 lush-glass shadow-lg relative overflow-hidden group">
-                <img src={shortImages[i % shortImages.length]} className="w-full h-full object-cover rounded-[22px]" alt={name} />
+                <img src={url} className="w-full h-full object-cover rounded-[22px]" alt={users[i] || 'Creator'} />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent pt-8 pb-2 flex justify-center items-end">
-                   <span className="text-[10px] font-black text-white uppercase tracking-tighter drop-shadow-md">{name}</span>
+                   <span className="text-[10px] font-black text-white uppercase tracking-tighter drop-shadow-md">{users[i] || 'User'}</span>
                 </div>
               </div>
             </div>
@@ -43,7 +43,7 @@ export const Home: React.FC<HomeProps> = ({ onStartGen }) => {
         <div className="space-y-3">
           <div className="relative">
             <div className="carousel-track">
-              {[...STYLE_TEMPLATES.slice(0, 8), ...STYLE_TEMPLATES.slice(0, 8)].map((style, idx) => (
+              {[...STYLE_TEMPLATES, ...STYLE_TEMPLATES].map((style, idx) => (
                 <StyleCard 
                   key={`row1-${style.id}-${idx}`} 
                   style={style} 
@@ -56,7 +56,7 @@ export const Home: React.FC<HomeProps> = ({ onStartGen }) => {
 
           <div className="relative">
             <div className="carousel-track-reverse">
-              {[...STYLE_TEMPLATES.slice(7, 15), ...STYLE_TEMPLATES.slice(7, 15)].map((style, idx) => (
+              {[...STYLE_TEMPLATES].reverse().concat([...STYLE_TEMPLATES].reverse()).map((style, idx) => (
                 <StyleCard 
                   key={`row2-${style.id}-${idx}`} 
                   style={style} 
@@ -69,7 +69,7 @@ export const Home: React.FC<HomeProps> = ({ onStartGen }) => {
         </div>
       </section>
 
-      {/* Your Favourites Section (Exactly 15 unique icons) */}
+      {/* Your Favourites Section (15 unique icons from the collection) */}
       <section className="mt-8 px-6 space-y-4 pb-24">
         <h2 className="text-base font-black tracking-tight uppercase italic drop-shadow-md text-white/90">Your favourites</h2>
         <div className="flex gap-4 overflow-x-auto hide-scrollbar">
