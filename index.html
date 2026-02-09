@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,6 +59,8 @@
       box-shadow: 0 50px 100px -20px rgba(0,0,0,0.9), 
                   inset 0 0 0 1px rgba(255,255,255,0.05),
                   0 0 20px rgba(255,107,0,0.05);
+      /* Fix subpixel rendering on rounding */
+      transform: translateZ(0);
     }
     .phone-frame::before {
       content: '';
@@ -113,6 +116,46 @@
     .preview-blur-on-hover:hover .hover-icon {
       opacity: 1;
       transform: scale(1);
+    }
+
+    /* Fly to Library Animation - Updated to target corner specifically */
+    @keyframes fly-to-library {
+      0% {
+        transform: scale(1) translate(0, 0);
+        opacity: 1;
+        border-radius: 0;
+      }
+      100% {
+        transform: scale(0.1) translate(180px, 350px);
+        opacity: 0;
+        border-radius: 50px;
+      }
+    }
+    .animate-fly {
+      animation: fly-to-library 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    }
+
+    /* Floating column animation - More pronounced rocking */
+    @keyframes slow-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-15px) rotate(0.5deg); }
+      75% { transform: translateY(15px) rotate(-0.5deg); }
+    }
+    .animate-slow-float {
+      animation: slow-float 10s ease-in-out infinite;
+    }
+
+    /* Hardware acceleration for smooth scaling on cards */
+    .smooth-scale {
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      will-change: transform;
+    }
+
+    /* Disable focus ring globally for inputs */
+    input:focus {
+      outline: none !important;
+      box-shadow: none !important;
     }
   </style>
 <script type="importmap">
